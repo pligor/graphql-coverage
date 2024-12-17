@@ -1,0 +1,3 @@
+graphql-core
+pandas
+matplotlib
