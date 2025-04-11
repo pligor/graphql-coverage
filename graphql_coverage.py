@@ -26,7 +26,14 @@ def main(schema_path: str, queries_path: str, only_leafs: bool = False, depth: i
     schema_fields = parse_schema(schema_path=schema_path, only_leafs=only_leafs)
     queries = load_queries(queries_path=queries_path)
     field_usage, used_fields = parse_queries_and_extract_fields(queries=queries, only_leafs=only_leafs)
-    assert used_fields.issubset(schema_fields), "All used fields must be defined in the schema"
+    
+    # Compute missing fields: those used but not defined in the schema
+    missing_fields = used_fields - schema_fields
+    # Assert that there are no missing fields. If there are, include them in the error message.
+    assert not missing_fields, (
+        f"All used fields must be defined in the schema. The following fields are missing: {missing_fields}"
+    )
+    
     coverage_percentage, covered_fields, uncovered_fields = calculate_coverage(schema_fields=schema_fields,
                                                                                used_fields=used_fields,
                                                                                normalize=normalize_field_names)

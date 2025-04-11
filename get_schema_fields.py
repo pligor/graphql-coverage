@@ -81,9 +81,9 @@ def get_schema_fields(
             if not only_leafs or (only_leafs and not has_subfields):
                 fields.add(hierarchical_field)
 
-            # Recursively process subfields
+            # Recursively process subfields using a fresh copy of visited for each branch
             if has_subfields:
-                extract_fields_from_type(field_type, hierarchical_field, visited)
+                extract_fields_from_type(field_type, hierarchical_field, visited.copy())
 
         return fields
 
